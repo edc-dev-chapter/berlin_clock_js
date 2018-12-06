@@ -1,0 +1,22 @@
+{
+  "name": "berlin_clock_js",
+  "version": "1.0.0",
+  "description": "Berlin Clock Kata",
+  "scripts": {
+    "test": "mocha test/*.js",
+    "test-watch": "mocha -w test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:edc-dev-chapter/berlin_clock_js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.0.4"
+  },
+  "dependencies": {
+    "@types/chai": "^4.1.7"
+  }
+}
