@@ -7,6 +7,25 @@ module.exports = {
     getSecondsLamp
 };
 
+const Color = {
+    OFF: 'O',
+    YELLOW: 'Y',
+    RED: 'R'
+};
+
+class Row {
+    constructor(size, color) {
+        this.size = size;
+        this.color = color;
+    }
+}
+
+const fiveMinutesRow = new Row(11, Color.YELLOW);
+const singleMinuteRow = new Row(4, Color.YELLOW);
+const secondsRow = new Row(1, Color.YELLOW);
+const singleHourRow = new Row(4, Color.RED);
+const fiveHoursRow = new Row(4, Color.RED);
+
 function toBerlinTime(time) {
     return getSecondsLamp(time)
         + getFiveHoursRow(time)
@@ -17,53 +36,42 @@ function toBerlinTime(time) {
 
 function getSingleMinutesRow(time) {
     const minutes = time.split(':')[1];
-    const allLamps = 4;
-    const minutesIntervalForAllLamps = 5;
-    const lampsToLight = minutes % minutesIntervalForAllLamps;
+    const lampsToLight = minutes % 5;
 
-    return lightLamps(lampsToLight, allLamps);
+    return lightLamps(lampsToLight, singleMinuteRow);
 }
 
 function getFiveMinutesRow(time) {
     const minutes = time.split(':')[1];
-    const allLamps = 11;
     const lampsToLight = Math.floor(minutes / 5);
 
-    const modifyEveryThird = (element, index) => index % 3 === 2 ? 'R' : element;
-
-    return lightLamps(lampsToLight, allLamps, 'Y', 'O', modifyEveryThird);
+    return lightLamps(lampsToLight, fiveMinutesRow).replace(/YYY/g, 'YYR')
 }
 
 function getSingleHourRow(time) {
     const hours = time.split(':')[0];
-    const allLamps = 4;
     const lampsToLight = hours % 5;
 
-    return lightLamps(lampsToLight, allLamps, 'R');
+    return lightLamps(lampsToLight, singleHourRow);
 }
 
 function getFiveHoursRow(time) {
     const hours = time.split(':')[0];
-    const allLamps = 4;
     const lampsToLight = Math.floor(hours / 5);
 
-    return lightLamps(lampsToLight, allLamps, 'R');
+    return lightLamps(lampsToLight, fiveHoursRow);
 }
 
 function getSecondsLamp(time) {
     const seconds = time.split(':')[2];
-    const allLamps = 1;
-    const lampsToLight = seconds % 2 === 0 ? 1 : 0;
-    return lightLamps(lampsToLight, allLamps)
+    const lampsToLight = 1 - seconds % 2;
+    return lightLamps(lampsToLight, secondsRow)
 }
 
-function lightLamps(toLight, allLamps, color = 'Y', empty = 'O', colorModification) {
-    const emptyLamps = empty.repeat(allLamps - toLight);
-    let lightedLamps = color.repeat(toLight);
 
-    if (colorModification) {
-        lightedLamps = lightedLamps.split('').map(colorModification).join('');
-    }
+function lightLamps(toLight, row) {
+    const emptyLamps = Color.OFF.repeat(row.size - toLight);
+    const lightedLamps = row.color.repeat(toLight);
 
     return lightedLamps + emptyLamps
 }

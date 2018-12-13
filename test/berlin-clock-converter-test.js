@@ -1,10 +1,11 @@
 const expect = require('chai').expect;
-const berlinClockConverter = require('../src/berlin-clock-converter.js');
+const {
+    getFiveHoursRow, getFiveMinutesRow, getSecondsLamp, getSingleHourRow, getSingleMinutesRow, toBerlinTime
+} = require('../src/berlin-clock-converter.js');
 
 
 describe('Berlin Clock Kata', () => {
     describe('single minutes row', () => {
-        // given
         const testCases = [
             {time: '00:00:00', expected: 'OOOO'},
             {time: '03:11:19', expected: 'YOOO'},
@@ -18,18 +19,10 @@ describe('Berlin Clock Kata', () => {
             {time: '23:59:59', expected: 'YYYY'},
         ];
 
-        testCases.forEach(({time, expected}) => {
-            it(`should convert ${time} to ${expected}`, () => {
-                // when
-                const result = berlinClockConverter.getSingleMinutesRow(time);
-                // then
-                expect(result).to.equal(expected);
-            });
-        });
+        run(getSingleMinutesRow).against(testCases);
     });
 
     describe('five minutes row', () => {
-        // given
         const testCases = [
             {time: '00:00:00', expected: 'OOOOOOOOOOO'},
             {time: '12:04:00', expected: 'OOOOOOOOOOO'},
@@ -38,18 +31,10 @@ describe('Berlin Clock Kata', () => {
             {time: '12:35:00', expected: 'YYRYYRYOOOO'},
         ];
 
-        testCases.forEach(({time, expected}) => {
-            it(`should convert ${time} to ${expected}`, () => {
-                // when
-                const result = berlinClockConverter.getFiveMinutesRow(time);
-                // then
-                expect(result).to.equal(expected);
-            });
-        });
+        run(getFiveMinutesRow).against(testCases);
     });
 
     describe('single hours row', () => {
-        // given
         const testCases = [
             {time: '00:00:00', expected: 'OOOO'},
             {time: '23:59:59', expected: 'RRRO'},
@@ -58,18 +43,10 @@ describe('Berlin Clock Kata', () => {
             {time: '14:35:00', expected: 'RRRR'},
         ];
 
-        testCases.forEach(({time, expected}) => {
-            it(`should convert ${time} to ${expected}`, () => {
-                // when
-                const result = berlinClockConverter.getSingleHourRow(time);
-                // then
-                expect(result).to.equal(expected);
-            });
-        });
+        run(getSingleHourRow).against(testCases);
     });
 
     describe('five hours row', () => {
-        // given
         const testCases = [
             {time: '00:00:00', expected: 'OOOO'},
             {time: '23:59:59', expected: 'RRRR'},
@@ -78,18 +55,10 @@ describe('Berlin Clock Kata', () => {
             {time: '16:35:00', expected: 'RRRO'},
         ];
 
-        testCases.forEach(({time, expected}) => {
-            it(`should convert ${time} to ${expected}`, () => {
-                // when
-                const result = berlinClockConverter.getFiveHoursRow(time);
-                // then
-                expect(result).to.equal(expected);
-            });
-        });
+        run(getFiveHoursRow).against(testCases);
     });
 
     describe('seconds lamp', () => {
-        // given
         const testCases = [
             {time: '00:00:00', expected: 'Y'},
             {time: '00:00:01', expected: 'O'},
@@ -100,18 +69,10 @@ describe('Berlin Clock Kata', () => {
             {time: '23:59:59', expected: 'O'},
         ];
 
-        testCases.forEach(({time, expected}) => {
-            it(`should convert ${time} to ${expected}`, () => {
-                // when
-                const result = berlinClockConverter.getSecondsLamp(time);
-                // then
-                expect(result).to.equal(expected);
-            });
-        })
+        run(getSecondsLamp).against(testCases);
     });
 
     describe('berlin time', () => {
-        // given
         const testCases = [
             {time: '00:00:00', expected: 'YOOOOOOOOOOOOOOOOOOOOOOO'},
             {time: '23:59:59', expected: 'ORRRRRRROYYRYYRYYRYYYYYY'},
@@ -119,13 +80,19 @@ describe('Berlin Clock Kata', () => {
             {time: '11:37:01', expected: 'ORROOROOOYYRYYRYOOOOYYOO'},
         ];
 
-        testCases.forEach(({time, expected}) => {
-            it(`should convert ${time} to ${expected}`, () => {
-                // when
-                const result = berlinClockConverter.toBerlinTime(time);
-                // then
-                expect(result).to.equal(expected);
-            });
-        })
+        run(toBerlinTime).against(testCases);
     });
 });
+
+function run(f) {
+    return {
+        against: function (cases) {
+            cases.forEach(({time, expected}) => {
+                it(`should convert ${time} to ${expected}`, () => {
+                    const result = f(time);
+                    expect(result).to.equal(expected);
+                });
+            })
+        }
+    }
+}
